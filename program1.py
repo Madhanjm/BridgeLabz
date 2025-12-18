@@ -1,7 +1,7 @@
 template = "Hello <<UserName>>, How are you?"
 
 while True:
-    username=input("Enter Your Name : ").strip()
+    username=input("Enter Your Name: ").strip()
     if(len(username) >=3):
         break
     else:
@@ -9,6 +9,3 @@ while True:
 
 result=template.replace("<<UserName>>",username)  
 print(result)  
-
-
-    
