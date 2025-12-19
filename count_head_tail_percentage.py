@@ -17,4 +17,4 @@ for i in range(flip):
         head+=1
 
 print(f"Percentage of Head {(head/flip)*100} %")
-print(f"Percentage of Tail {(tail*flip)*100} %")    
+print(f"Percentage of Tail {(tail/flip)*100} %")    
