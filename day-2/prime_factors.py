@@ -1,4 +1,4 @@
-n=int(input("Enter the number"))
+n=int(input("Enter the number : "))
 i=2
 while i*i<=n:
      while n%i==0:
