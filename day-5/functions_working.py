@@ -295,3 +295,209 @@ print(my_fun())
 def my1_fun():
     return "hlo abin"
 print( my1_fun())
+
+#Arguments in the Decorated Function
+#Functions that requires arguments can also be decorated, just make sure you pass the arguments to the wrapper function:
+def changecase(func):
+  def myinner(x):
+    return func(x).upper()
+  return myinner
+
+@changecase
+def myfunction(nam):
+  return "Hello " + nam
+
+print(myfunction("John"))
+
+#*args and **kwargs
+def changecase(func):
+  def myinner(*args, **kwargs):
+    return func(*args, **kwargs).upper()
+  return myinner
+
+@changecase
+def myfunction(nam):
+  return "Hello " + nam
+
+print(myfunction("John"))
+
+#Decorators can accept their own arguments by adding another wrapper level.
+def changecase(n):
+  def changecase(func):
+    def myinner():
+      if n == 1:
+        a = func().lower()
+      else:
+        a = func().upper()
+      return a
+    return myinner
+  return changecase
+
+@changecase(1)
+def myfunction():
+  return "Hello Linus"
+
+print(myfunction())
+
+"""
+Multiple Decorators:
+You can use multiple decorators on one function.
+
+This is done by placing the decorator calls on top of each other.
+
+Decorators are called in the reverse order, starting with the one closest to the function.
+"""
+def changecase(func):
+  def myinner():
+    return func().upper()
+  return myinner
+
+def addgreeting(func):
+  def myinner():
+    return "Hello " + func() + " Have a good day!"
+  return myinner
+
+@changecase
+@addgreeting
+def myfunction():
+  return "Tobias"
+
+print(myfunction())
+
+"""
+Preserving Function Metadata:
+Functions in Python has metadata that can be accessed using the __name__ and __doc__ attributes.
+
+Normally, a function's name can be returned with the __name__ attribute:
+def myfunction():
+  return "Have a great day!"
+
+print(myfunction.__name__)
+
+But, when a function is decorated, the metadata of the original function is lost.
+
+TO fix this Python has a built-in function called "functools.wraps" that can be used to preserve the original function's name and docstring.
+we have to import functools
+
+import functools
+
+def changecase(func):
+  @functools.wraps(func)
+  def myinner():
+    return func().upper()
+  return myinner
+
+@changecase
+def myfunction():
+  return "Have a great day!"
+
+print(myfunction.__name__)
+"""
+
+"""
+Generators:
+Generators are functions that can pause and resume their execution.
+
+When a generator function is called, it returns a generator object, which is an iterator.
+
+The code inside the function is not executed yet, it is only compiled. The function only executes when you iterate over the generator.
+"""
+def my_generator():
+  yield 1
+  yield 2
+  yield 3
+
+for value in my_generator():
+  print(value)
+  
+ #Generators allow you to iterate over data without storing the entire dataset in memory.
+#Instead of using return, generators use the yield keyword.
+#The yield keyword is what makes a function a generator.
+#When yield is encountered, the function's state is saved, and the value is returned. The next time the generator is called, it continues from where it left off.
+def count_up_to(n):
+  count = 1
+  while count <= n:
+    yield count#Unlike return, which terminates the function, yield pauses it and can be called multiple times.
+
+
+    count += 1
+
+for num in count_up_to(5):
+  print(num)
+  
+""" 
+Generators Saves Memory:
+Generators are memory-efficient because they generate values on-the-fly instead of storing everything in memory.
+
+For large datasets, generators save memory: 
+"""
+def large_sequence(n):
+  for i in range(n):
+    yield i
+
+# This doesn't create a million numbers in memory
+gen = large_sequence(1000000)
+print(next(gen))
+print(next(gen))
+print(next(gen))
+
+#You can manually iterate through a generator using the next() function:
+def simple_gen():
+  yield "Emil"
+  yield "Tobias"
+  yield "Linus"
+
+gen = simple_gen()
+print(next(gen))
+print(next(gen))
+print(next(gen))
+
+#When there are no more values to yield, the generator raises a StopIteration exception:
+#Generator Expressions:
+#->Similar to list comprehensions, you can create generators using generator expressions with parentheses instead of square brackets:
+
+# List comprehension - creates a list
+list_comp = [x * x for x in range(5)]
+print(list_comp)
+
+# Generator expression - creates a generator
+gen_exp = (x * x for x in range(5))
+print(gen_exp)
+print(list(gen_exp))
+
+#fibnaci seq using genrator
+def fin():
+  a,b=0,1
+  while(True):
+    yield a
+    a,b=b,a+b
+    
+gen=fin()
+for _ in range(100):
+    print(next(gen))
+    
+#Generators have special methods for advanced control:
+#1.The send() method allows you to send a value to the generator:
+def echo_generator():
+  while True:
+    received = yield
+    print("Received:", received)
+
+gen = echo_generator()
+next(gen)  # Prime the generator
+gen.send("Hello")
+gen.send("World")
+
+#2.The close() method stops the generator:
+def my_gen():
+  try:
+    yield 1
+    yield 2
+    yield 3
+  finally:
+    print("Generator closed")
+
+gen = my_gen()
+print(next(gen))
+gen.close()
+
