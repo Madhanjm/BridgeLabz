@@ -1,5 +1,5 @@
  """
- Longest Substring Without Repeating Characters
+Longest Substring Without Repeating Characters
 Solved
 Medium
 Topics
@@ -33,8 +33,7 @@ Constraints:
 0 <= s.length <= 5 * 104
 s consists of English letters, digits, symbols and spaces.
 """
-
-class Solution(object):
+ class Solution(object):
     def lengthOfLongestSubstring(self, s):
         """
         :type s: str
